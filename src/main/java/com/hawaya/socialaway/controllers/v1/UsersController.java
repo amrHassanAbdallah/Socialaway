@@ -1,4 +1,4 @@
-package com.hawaya.socialaway.controllers;
+package com.hawaya.socialaway.controllers.v1;
 
 import com.hawaya.socialaway.domains.User;
 import com.hawaya.socialaway.payloads.CreateUserRequest;
