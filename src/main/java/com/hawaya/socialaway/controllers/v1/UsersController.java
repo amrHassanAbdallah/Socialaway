@@ -2,6 +2,7 @@ package com.hawaya.socialaway.controllers.v1;
 
 import com.hawaya.socialaway.domains.User;
 import com.hawaya.socialaway.payloads.CreateUserRequest;
+import com.hawaya.socialaway.payloads.QueryUsersRequest;
 import com.hawaya.socialaway.repostories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:8080")
@@ -32,6 +34,24 @@ public class UsersController {
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println(e.toString());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/users/query")
+    public ResponseEntity<Object> queryUsers(@Valid @RequestBody QueryUsersRequest payload, @RequestHeader("X-UserID")
+            String userID) {
+        try {
+            if (userID.equals("")){
+                return new ResponseEntity<>("invalid user id or missing", HttpStatus.UNAUTHORIZED);
+            }
+
+            User user = userRepository.findById(userID).get();
+            QueryUsersByLocation q = new QueryUsersByLocation(payload.getLocation()[0],payload.getLocation()[1],
+                    payload.getDistance(),userID, payload.getPage(),payload.getLimit(),user.getPreferences() );
+            List<User> users = userRepository.listByGEOLocation(q);
+            return new ResponseEntity<>(users,HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

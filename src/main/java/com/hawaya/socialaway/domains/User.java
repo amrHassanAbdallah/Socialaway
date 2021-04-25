@@ -6,6 +6,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Document(collection = "users")
@@ -17,7 +18,7 @@ public class User {
     private String email;
     //todo add images
     private String gender;
-    private String[] preferences;
+    private ArrayList<String> preferences;
     private Date last_seen;
     private Object loc;
 
@@ -61,7 +62,7 @@ public class User {
     private Date updated_at;
 */
 
-    public User(String name, String info, String email, String gender, String[] preferences,loc location) {
+    public User(String name, String info, String email, String gender, ArrayList<String> preferences,loc location) {
         this.name = name;
         this.info = info;
         this.email = email;
@@ -111,11 +112,11 @@ public class User {
         this.gender = gender;
     }
 
-    public String[] getPreferences() {
+    public ArrayList<String> getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(String[] preferences) {
+    public void setPreferences(ArrayList<String> preferences) {
         this.preferences = preferences;
     }
 

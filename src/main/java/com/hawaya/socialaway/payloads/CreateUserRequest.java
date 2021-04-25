@@ -3,7 +3,9 @@ package com.hawaya.socialaway.payloads;
 import com.hawaya.socialaway.payloads.customvalidator.ValidLocationConstraint;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 
 
 public class CreateUserRequest {
@@ -11,12 +13,13 @@ public class CreateUserRequest {
     @Length(min = 3, max = 30)
     private String name;
     @NotBlank(message = "email is required")
+    @Email
     private String email;
     @Length(max = 130)
     private String info;
     @NotBlank(message = "gender is required")
     private String gender;
-    private String[] preferences;
+    private ArrayList<String> preferences;
     @ValidLocationConstraint
     private Float[] location;
 
@@ -56,19 +59,20 @@ public class CreateUserRequest {
         this.gender = gender;
     }
 
-    public String[] getPreferences() {
-        if (this.preferences == null || this.preferences.length ==0 ){
+    public ArrayList<String> getPreferences() {
+        if (this.preferences == null || this.preferences.size() ==0 ){
+            this.preferences = new ArrayList<String>();
             if (this.gender.equals("male")){
-               this.preferences = new String[]{"female"};
+                this.preferences.add("female");
             }else if(this.gender.equals("female")){
-                this.preferences = new String[]{"male"};
+                this.preferences.add("male");
             }
 
         }
         return preferences;
     }
 
-    public void setPreferences(String[] preferences) {
+    public void setPreferences(ArrayList<String> preferences) {
         this.preferences = preferences;
     }
 
