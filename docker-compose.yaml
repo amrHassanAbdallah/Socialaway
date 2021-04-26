@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  mongo-db:
+    image: mongo
+    ports:
+      - "27021:27020"
+    container_name: mongo-db
+    network_mode: host
+    volumes:
+      - ./db/:/data/db
+  socialawat-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8189:8080"
+    container_name: socialawat-service
+    network_mode: "host"
+    hostname: :localhost
+    depends_on:
+      - mongo-db

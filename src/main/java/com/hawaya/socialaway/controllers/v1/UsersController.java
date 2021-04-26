@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -87,6 +88,13 @@ public class UsersController {
     public Map<String, String> handleMessageNotFoundExceptions(HttpMessageNotReadableException ex) {
         Map<String, String> errors = new HashMap<>();
        errors.put("error","missing request body");
+        return errors;
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public Map<String, String> handleMissingUserIdExceptions(MissingRequestHeaderException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error","missing X-UserID from the headers");
         return errors;
     }
 }
