@@ -2,22 +2,29 @@ package com.hawaya.socialaway.payloads;
 
 import com.hawaya.socialaway.payloads.customvalidator.ValidLocationConstraint;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class QueryUsersRequest {
     @ValidLocationConstraint
-    private Float[] location;
-    @NotBlank
+    private List<Double> location;
+    @Range(min = 0, max = 10000)
+    @NotNull
     private Integer distance;//todo should gave the user the ability to use km or mile
 
-    @Length(min = 0, max = 1000)
+    @Range(min = 0, max = 1000)
+    @NotNull
     private Integer page;
-    @Length(min = 1, max = 100)
+    @Range(min = 1, max = 100)
+    @NotNull
     private Integer limit;
 
-    public Float[] getLocation() {
+    public List<Double> getLocation() {
         return location;
     }
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.NearQuery;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
@@ -25,35 +26,36 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         final Query query = new Query();
         final List<Criteria> criteria = new ArrayList<>();
 
-        if (payload.getUserID() != null){
-            List<ObjectId>Ids = new ArrayList<>();
+       /* if (payload.getUserID() != null) {
+            List<ObjectId> Ids = new ArrayList<>();
             Ids.add(new ObjectId(payload.getUserID()));
             criteria.add(Criteria.where("_id").nin(Ids));
-        }
-        if (payload.getLat() !=null && payload.getLng() != null && payload.getDistance()!=null){
-            Point currentLoc = new Point(payload.getLng(),payload.getLat());
-            criteria.add(Criteria.where("loc").near(currentLoc).minDistance(0).maxDistance(payload.getDistance()));
-        }
-        if (payload.getGenders() != null){
+        }*/
+
+
+        criteria.add(Criteria.where("loc").near(new Point(payload.getLng(), payload.getLat())).maxDistance(payload.getDistance()));
+    /*    if (payload.getGenders() != null) {
             criteria.add(Criteria.where("gender").in(payload.getGenders()));
         }
 
         int page = 0;
         int limit = 10;
-        if (payload.getPage()!= null){
+        if (payload.getPage() != null) {
             page = payload.getPage();
         }
-        if (payload.getLimit() != null){
+        if (payload.getLimit() != null) {
             limit = payload.getLimit();
         }
         int skip = 0;
-        if (page > 0 ){
+        if (page > 0) {
             skip = limit * page;
         }
-        if(!criteria.isEmpty()) {
+        query.limit(limit).skip(skip);
+*/
+
+        if (!criteria.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         }
-        query.limit(limit).skip(skip);
-        return mongoTemplate.find(query, User.class);
+        return mongoTemplate.find(query, User.class,"users");
     }
 }

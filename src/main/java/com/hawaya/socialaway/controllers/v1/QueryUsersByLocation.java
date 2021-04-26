@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QueryUsersByLocation {
-    private Float lng;
-    private Float lat;
-    private Integer distance;
+    private Double lng;
+    private Double lat;
+    private int distance;
     private String userID;
 
     private Integer page;
     private Integer limit;
     private ArrayList<String> genders;
 
-    public QueryUsersByLocation(Float lng, Float lat, Integer distance, String userID, Integer page, Integer limit,
+    public QueryUsersByLocation(Double lng, Double lat, Integer distance, String userID, Integer page, Integer limit,
                                 ArrayList<String> genders) {
         this.lng = lng;
         this.lat = lat;
@@ -24,15 +24,15 @@ public class QueryUsersByLocation {
         this.genders = genders;
     }
 
-    public Float getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public Float getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public Integer getDistance() {
+    public int getDistance() {
         return distance;
     }
 

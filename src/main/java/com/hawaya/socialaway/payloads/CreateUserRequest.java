@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class CreateUserRequest {
@@ -21,7 +22,7 @@ public class CreateUserRequest {
     private String gender;
     private ArrayList<String> preferences;
     @ValidLocationConstraint
-    private Float[] location;
+    private List<Float> location;
 
 
 
@@ -76,12 +77,12 @@ public class CreateUserRequest {
         this.preferences = preferences;
     }
 
-    public Float[] getLocation() {
+    public List<Float> getLocation() {
         return location;
     }
 
-    public void setLocation(Float[] location) throws Exception {
-        if (location.length != 2){
+    public void setLocation(List<Float> location) throws Exception {
+        if (location.size() != 2){
             throw new Exception("location only contains lng, lat values");
         }
         this.location = location;

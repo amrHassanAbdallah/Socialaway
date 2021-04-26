@@ -1,15 +1,19 @@
 package com.hawaya.socialaway.domains;
 
-import org.springframework.data.annotation.CreatedDate;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 
 @Document(collection = "users")
+@NoArgsConstructor
 public class User {
     @Id
     private String id;
@@ -20,56 +24,22 @@ public class User {
     private String gender;
     private ArrayList<String> preferences;
     private Date last_seen;
-    private Object loc;
+    @GeoSpatialIndexed(name = "geo_index",type = GeoSpatialIndexType.GEO_2DSPHERE)
+    private Location loc;
 
-    public Object getLoc() {
-        return loc;
-    }
-
-    public void setLoc(Object loc) {
-        this.loc = loc;
-    }
-
-    public static class loc {
-        private String type;
-        private Float[] coordinates;
-
-        public loc( Float[] coordinates) {
-            this.type = "Point";
-            this.coordinates = coordinates;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public Float[] getCoordinates() {
-            return coordinates;
-        }
-
-        public void setCoordinates(Float[] coordinates) {
-            this.coordinates = coordinates;
-        }
-    }
-/*
-    @CreatedDate
-    private Date created_at;
-    @LastModifiedDate
-    private Date updated_at;
-*/
-
-    public User(String name, String info, String email, String gender, ArrayList<String> preferences,loc location) {
+    public User(String name, String info, String email, String gender, ArrayList<String> preferences,
+                List<Float> coordinates) {
         this.name = name;
         this.info = info;
         this.email = email;
         this.gender = gender;
         this.preferences = preferences;
         this.last_seen = new Date();
-        this.loc = location;
+        this.loc = new Location(coordinates);
+    }
+
+    public void setLoc(Location loc) {
+        this.loc = loc;
     }
 
     public String getId() {
@@ -127,4 +97,9 @@ public class User {
     public void setLast_seen(Date last_seen) {
         this.last_seen = last_seen;
     }
+
+    public Location getLoc() {
+        return loc;
+    }
+
 }
