@@ -5,6 +5,7 @@ import com.hawaya.socialaway.payloads.CreateUserRequest;
 import com.hawaya.socialaway.payloads.QueryUsersRequest;
 import com.hawaya.socialaway.repostories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -45,6 +47,7 @@ public class UsersController {
     public ResponseEntity<Object> queryUsers(@Valid @RequestBody QueryUsersRequest payload, @RequestHeader("X-UserID")
             String userID) {
         try {
+            //todo improve the response to be object that contains data
             if (userID.equals("")){
                 return new ResponseEntity<>("invalid user id or missing", HttpStatus.UNAUTHORIZED);
             }
@@ -54,9 +57,17 @@ public class UsersController {
                     payload.getDistance(),userID, payload.getPage(),payload.getLimit(),user.getPreferences() );
             List<User> users = userRepository.listByGEOLocation(q);
             return new ResponseEntity<>(users,HttpStatus.OK);
-        } catch (Exception e) {
+        }catch (UncategorizedMongoDbException e) {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("error","invalid location coordinates");
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }catch (NoSuchElementException e) {
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            System.out.println(e.getClass());
             System.out.println(e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+
+            return new ResponseEntity<>("null", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

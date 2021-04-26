@@ -24,18 +24,20 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     @Override
     public List<User> listByGEOLocation(QueryUsersByLocation payload) {
         final Query query = new Query();
-        final List<Criteria> criteria = new ArrayList<>();
 
-       /* if (payload.getUserID() != null) {
+
+
+        Point point = new Point(payload.getLat(), payload.getLng());
+        Criteria criteria = Criteria.where("loc").nearSphere(point).maxDistance(1000);
+        query.addCriteria(criteria);
+        if (payload.getUserID() != null) {
             List<ObjectId> Ids = new ArrayList<>();
             Ids.add(new ObjectId(payload.getUserID()));
-            criteria.add(Criteria.where("_id").nin(Ids));
-        }*/
+            query.addCriteria(Criteria.where("_id").nin(Ids));
+        }
 
-
-        criteria.add(Criteria.where("loc").near(new Point(payload.getLng(), payload.getLat())).maxDistance(payload.getDistance()));
-    /*    if (payload.getGenders() != null) {
-            criteria.add(Criteria.where("gender").in(payload.getGenders()));
+        if (payload.getGenders() != null) {
+            query.addCriteria(Criteria.where("gender").in(payload.getGenders()));
         }
 
         int page = 0;
@@ -50,12 +52,8 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         if (page > 0) {
             skip = limit * page;
         }
-        query.limit(limit).skip(skip);
-*/
-
-        if (!criteria.isEmpty()) {
-            query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
-        }
-        return mongoTemplate.find(query, User.class,"users");
+        List<User> users =
+                mongoTemplate.find(query.limit(limit).skip(skip), User.class);
+        return users;
     }
 }
