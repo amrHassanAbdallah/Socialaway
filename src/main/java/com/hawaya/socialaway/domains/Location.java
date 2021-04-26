@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Location {
     private String type;
-    private List<Float> coordinates;
+    private List<Double> coordinates;
 
-    public Location(List<Float> coordinates) {
+    public Location(List<Double> coordinates) {
         this.type = "Point";
         this.coordinates = coordinates;
     }
@@ -19,11 +19,11 @@ public class Location {
         this.type = type;
     }
 
-    public List<Float> getCoordinates() {
+    public List<Double> getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(List<Float> coordinates) {
+    public void setCoordinates(List<Double> coordinates) {
         this.coordinates = coordinates;
     }
 }

@@ -2,6 +2,7 @@ package com.hawaya.socialaway.domains;
 
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+@CompoundIndex(def = "{'loc':'2dsphere', 'gender':-1,'_id':-1}", name = "users_near_each_others")
 @Document(collection = "users")
 @NoArgsConstructor
 public class User {
@@ -28,7 +29,7 @@ public class User {
     private Location loc;
 
     public User(String name, String info, String email, String gender, ArrayList<String> preferences,
-                List<Float> coordinates) {
+                List<Double> coordinates) {
         this.name = name;
         this.info = info;
         this.email = email;

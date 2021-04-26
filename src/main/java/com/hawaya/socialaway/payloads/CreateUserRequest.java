@@ -22,7 +22,7 @@ public class CreateUserRequest {
     private String gender;
     private ArrayList<String> preferences;
     @ValidLocationConstraint
-    private List<Float> location;
+    private List<Double> location;
 
 
 
@@ -77,11 +77,11 @@ public class CreateUserRequest {
         this.preferences = preferences;
     }
 
-    public List<Float> getLocation() {
+    public List<Double> getLocation() {
         return location;
     }
 
-    public void setLocation(List<Float> location) throws Exception {
+    public void setLocation(List<Double> location) throws Exception {
         if (location.size() != 2){
             throw new Exception("location only contains lng, lat values");
         }
